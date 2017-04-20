@@ -4,7 +4,7 @@ try:
     from yaml import CLoader as Loader
 except ImportError:
     from yaml import Loader
-
+from wsgiref.simple_server import make_server
 
 class Task:
     def __init__(self, title, estimate):
@@ -78,6 +78,9 @@ def wsgi_application(environ, start_response):
     critical_tasks = []
     for task in roadmap.filter("in_progress"):
         if task.remaining <= timedelta(days=3):
-            critical_tasks.append(task)
+            critical_tasks.append((task.title + task.state + str(task.estimate)).encode('utf-8'))
     return critical_tasks
 
+if __name__ == '__main__':
+    server = make_server('127.0.0.1', 8080, wsgi_application)
+    server.serve_forever()
