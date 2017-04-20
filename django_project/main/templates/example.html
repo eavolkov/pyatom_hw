@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+    <h2>Сообщение отладки (info)</h2>
+    {{ info }}
+    <h2>Форма создания</h2>
+    <form action="{% url 'create' %}" method="post">
+        {% for field in form.visible_fields %}
+            <h3>Поле {{ field.label }}</h3>
+            <h4>Ошибки</h4>
+            {% for error in field.errors %}
+                {% if forloop.first %}
+                <ul>
+                {% endif %}
+                <li>{{ error }}</li>
+                {% if forloop.first %}
+                </ul>
+                {% endif %}
+            {% empty %}
+                Отсутствуют
+            {% endfor %}
+            <h4>HTML-элемент</h4>
+            {{ field }}
+        {% endfor %}
+        <br>
+        <button type="submit">Сохранить</button>
+    </form>
+{% endblock %}
