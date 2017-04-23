@@ -1,6 +1,6 @@
 from main.roadmap import Roadmap, Task
 from main.views import initial_view
-from .forms import CreateForm, EditForm
+from .forms import CreateForm, EditForm, DeleteForm
 
 roadmap = Roadmap([])
 
@@ -13,6 +13,8 @@ def create_handler(request):
             task = Task(title, "in_progress", date)
             roadmap.add_task(task)
         except ValueError as e:
+            info = str(e)
+        except AssertionError as e:
             info = str(e)
     else:
         info = 'Incorrect request'
@@ -33,4 +35,19 @@ def edit_handler(request):
             info = str(e)
     else:
         info = 'Incorrect request'
+    return initial_view(request, info)
+
+def delete_handler(request):
+    if request.method == 'POST':
+        form = DeleteForm(request.POST)
+        info = 'Delete request was done successfully'
+        try:
+            title = form.get_data_to_delete()
+            if not roadmap.delete_task(title):
+                info = "Incorrect data: Task with name %s was not found" % title
+        except AssertionError as e:
+            info = str(e)
+    else:
+        info = 'Incorrect request'
+    print (info)
     return initial_view(request, info)

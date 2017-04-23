@@ -69,3 +69,18 @@ class EditForm(Form):
         if date <= datetime.now().date():
             raise ValueError("Incorrect data! Date can't be less than today")
         return (title, state, date)
+
+
+class DeleteForm(Form):
+
+    title_delete = fields.CharField(
+        label='Title',
+        required=True, max_length=128,
+        widget=widgets.Textarea(
+            attrs={'class': 'title_delete'}
+        )
+    )
+
+    def get_data_to_delete(self):
+        title = self.data.get("title_delete")
+        return (title)

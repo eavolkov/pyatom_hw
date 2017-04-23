@@ -1,8 +1,4 @@
 from datetime import datetime, date
-try:
-    from yaml import CLoader as Loader
-except ImportError:
-    from yaml import Loader
 
 class Task:
     def __init__(self, title, state, estimate):
@@ -59,6 +55,16 @@ class Roadmap:
             if task.title == new_task.title:
                 task.state = new_task.state
                 task.estimate = new_task.estimate
+                break
+        else:
+            return False
+        return True
+
+    def delete_task(self, title):
+        assert type(title) is str, 'Error: Argument <title> should be a string!'
+        for task in self.tasks:
+            if task.title == title:
+                self.tasks.remove(task)
                 break
         else:
             return False
